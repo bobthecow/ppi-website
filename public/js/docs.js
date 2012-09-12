@@ -13,26 +13,27 @@ jQuery(document).ready(function ($) {
 		}
 
 	});
-	
-	$('.section-title span a').live('click', function(e) {
-		e.preventDefault();
-		var hash = $(this).parents('p.section-title').attr('id');
-		$.scrollTo('#' + $(this).attr('href'), 100, {offset: {top:-55, left:0} });
-	});
-	
-	$('.toc-mobile ul li a').click(function(e) {
-		
-		e.preventDefault();
-		
-		// Offset is to fix the bug caused by the topbar, and prevent hiding the section's title.
-		$.scrollTo($(this).attr('href'), 800,{offset: {top:-55, left:0} });
-	});
-	
-	if(window.location.hash != '') {
 
-		var hash = window.location.hash;
-		window.scrollTo(0, 0);
-		$('.toc-mobile .items a[href=' + hash + ']').trigger('click');
+	var scrollOffset =  {offset: {top:-55, left:0} };
+
+	$('.toc-mobile .items a, .section-title a').live('click', function(e) {
+		e.preventDefault();
+
+		// we'll be needing this in a second
+		var href = $(this).attr('href');
+
+		// Kansas city shuffle
+		var currentScroll = document.body.scrollTop;
+		window.location.hash = href;
+		document.body.scrollTop = currentScroll;
+
+		// And scrooolllllllll!
+		$.scrollTo(href, 100, scrollOffset);
+	});
+
+	if(window.location.hash != '') {
+		document.body.scrollTop = 0;
+		$.scrollTo(window.location.hash, 100, scrollOffset);
 	}
 	
 	$('.section-title').mouseenter(function() {
